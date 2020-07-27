@@ -73,15 +73,15 @@ namespace ToDoList.Tests
     [TestMethod]
     public void Equals_ReturnsTrueIfDescriptionsAreTheSame_Item()
     {
-      Item firstItem = new Item("Mow the lawn", 0);
-      Item secondItem = new Item("Mow the lawn", 0);
+      Item firstItem = new Item("Mow the lawn");
+      Item secondItem = new Item("Mow the lawn");
       Assert.AreEqual(firstItem, secondItem);
     }
 
     [TestMethod]
     public void Save_SavesToDatabase_ItemList()
     {
-      Item testItem = new Item("Mow the lawn", 0);
+      Item testItem = new Item("Mow the lawn");
       testItem.Save();
       List<Item> result = Item.GetAll();
       List<Item> testList = new List<Item>{testItem};
@@ -94,9 +94,9 @@ namespace ToDoList.Tests
       //Arrange
       string description01 = "Walk the dog";
       string description02 = "Wash the dishes";
-      Item newItem1 = new Item(description01, 0);
+      Item newItem1 = new Item(description01);
       newItem1.Save();
-      Item newItem2 = new Item(description02, 0);
+      Item newItem2 = new Item(description02);
       newItem2.Save();
       List<Item> newList = new List<Item> { newItem1, newItem2 };
 
@@ -121,20 +121,21 @@ namespace ToDoList.Tests
     //   Assert.AreEqual(1, result);
     // }
 
-    // [TestMethod]
-    // public void Find_ReturnsCorrectItem_Item()
-    // {
-    //   //Arrange
-    //   string description01 = "Walk the dog";
-    //   string description02 = "Wash the dishes";
-    //   Item newItem1 = new Item(description01);
-    //   Item newItem2 = new Item(description02);
+    [TestMethod]
+    public void Find_ReturnsCorrectItemFromDatabase_Item()
+    {
+      //Arrange
+      // string description01 = "Walk the dog";
+      // string description02 = "Wash the dishes";
+      Item newItem1 = new Item("Walk the dog");
+      newItem1.Save();
+      Item newItem2 = new Item("Wash the dishes");
+      newItem2.Save();
 
-    //   //Act
-    //   Item result = Item.Find(2);
-
-    //   //Assert
-    //   Assert.AreEqual(newItem2, result);
-    // }
+      //Act
+      Item foundItem = Item.Find(1); //newItem1.Id
+      //Assert
+      Assert.AreEqual(newItem2.Description, foundItem.Description);
+    }
   }
 }

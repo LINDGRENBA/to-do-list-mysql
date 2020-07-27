@@ -8,11 +8,17 @@ namespace ToDoList.Models
     public string Description { get; set; }
     public int Id { get; set; }
 
+    public Item(string description)
+    {
+      Description = description;
+    }
+
     public Item(string description, int id)
     {
       Description = description;
       Id = id;
     }
+    //you're supposed to leave existing constructor and then add a second constructor in addition with the Id=id portion.
 
     public override bool Equals(System.Object otherItem)
     {
@@ -66,10 +72,32 @@ namespace ToDoList.Models
       }
     }
 
-    public static Item Find(int searchId)
+    public static Item Find(int id)
     {
-      Item placeholderItem = new Item("placeholder item", 0);
-      return placeholderItem;
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT * FROM items WHERE id = @thisId;"; // was 'items'
+      MySqlParameter thisId = new MySqlParameter();
+      thisId.ParameterName = "@thisId";
+      thisId.Value = id; 
+      cmd.Parameters.Add(thisId);
+      var rdr = cmd.ExecuteReader() as MySqlDataReader;
+      int itemId = 0;
+      string itemDescription = "";
+      while(rdr.Read())
+      {
+        itemId = rdr.GetInt32(0);
+        itemDescription = rdr.GetString(1);
+      }
+      Item foundItem = new Item(itemDescription, itemId);
+
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+      return foundItem;
     }
 
     public void Save()
