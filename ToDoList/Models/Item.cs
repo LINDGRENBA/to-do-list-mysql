@@ -53,7 +53,7 @@ namespace ToDoList.Models
 
     public static Item Find(int searchId)
     {
-      Item placeholderItem = new Item("placeholder item");
+      Item placeholderItem = new Item("placeholder item", 0);
       return placeholderItem;
     }
 
